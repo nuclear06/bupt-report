@@ -1,7 +1,7 @@
 name: BUPT ncov clock in
 on:
   schedule:
-    - cron: "33,34,35 6 * * *"
+    - cron: "40-50/2 6 * * *"
   workflow_dispatch:
 
 
