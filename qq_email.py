@@ -1,10 +1,11 @@
+from parameter import email_logger
 import smtplib
 from email.mime.text import MIMEText
 
 s = smtplib.SMTP_SSL('smtp.qq.com', 465)  # 邮件服务器及端口号
 
 
-def get_mail(msg_from,msg_to,flag,content='-UNKNOWN-'):
+def get_mail(msg_from,msg_to,flag,content):
 
     if flag:
         subject = "晨午晚检自动打卡成功"  # 主题
@@ -19,12 +20,12 @@ def get_mail(msg_from,msg_to,flag,content='-UNKNOWN-'):
     return msg
 
 
-def right_mail(user):
+def right_mail(user,content='-UNKNOWN-'):
     try:
         msg_from = user["mail_from"]  # 发送方邮箱
         passwd = user["mail_key"]  # 填入发送方邮箱的授权码
         msg_to = user["mail_to"]  # 收件人邮箱
-        msg = get_mail(msg_from,msg_to,True)
+        msg = get_mail(msg_from,msg_to,True,content)
         s.login(msg_from, passwd)
         s.sendmail(msg_from, msg_to, msg.as_string())
         print("发送成功")
@@ -45,5 +46,6 @@ def error_mail(user, content):
         print("发送成功")
     except smtplib.SMTPException:
         print("发送失败")
+        email_logger.info('邮件发送失败')
     finally:
         s.quit()
