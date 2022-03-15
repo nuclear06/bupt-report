@@ -1,1 +1,2 @@
-logging
+logging==0.49.6
+
