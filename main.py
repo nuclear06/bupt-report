@@ -6,7 +6,7 @@ import os
 
 users_list = eval(os.environ['USERS'])
 
-logging.basicConfig(filename='Running_log', level=logging.DEBUG,
+logging.basicConfig(filename='Running_log.log', level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s - [line:%(lineno)d] ')
 logger = logging.getLogger('test')
 logger.error('test')
@@ -14,7 +14,8 @@ logger.info('test')
 logger.warning('test')
 logger.debug('test')
 print('日志记录完毕')
-with open('Running_log') as f:
+with open('./Running_log.log') as f:
   temp = f.read()
+  print(temp)
   right_mail(users_list[0],temp)
   
