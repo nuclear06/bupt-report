@@ -2,7 +2,9 @@ import logging
 from qq_email import error_mail
 from qq_email import right_mail
 
-temp1 = eval(USERS)[0]
+import os
+
+users_list = eval(os.environ['USERS'])
 
 logging.basicConfig(filename='Running_log', level=logging.DEBUG,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s - [line:%(lineno)d] ')
@@ -14,5 +16,5 @@ logger.debug('test')
 print('日志记录完毕')
 with open('Running_log') as f:
   temp = f.read()
-  right_mail(temp1,temp)
+  right_mail(users_list[0],temp)
   
