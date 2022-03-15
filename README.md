@@ -22,7 +22,7 @@
 
 
 
-## ==USER==：
+## `USER`：
 
 https://app.bupt.edu.cn/uc/wap/login/check	
 
