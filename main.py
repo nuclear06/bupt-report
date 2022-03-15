@@ -8,5 +8,5 @@ logger.info('test')
 logger.warning('test')
 logger.debug('test')
 print('日志记录完毕')
-with open('./Running_log','a') as f:
+with open('./test.txt','w') as f:
   f.write('hello world')
