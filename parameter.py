@@ -21,7 +21,7 @@ email_logger = logging.getLogger('email')
 # logging.getLogger('main').addHandler(console)
 # logging.getLogger('__main__').addHandler(console)
 
-
+check_url = 'https://app.bupt.edu.cn/uc/wap/login/check'
 login_url = 'https://app.bupt.edu.cn/uc/wap/login?redirect=https%3A%2F%2Fapp.bupt.edu.cn%2Fsite%2Fncov%2Fxisudailyup'
 post_url = 'https://app.bupt.edu.cn/xisuncov/wap/open-report/save'
 history_url = 'https://app.bupt.edu.cn/xisuncov/wap/open-report/index'
