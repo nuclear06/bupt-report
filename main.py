@@ -69,11 +69,11 @@ def main(user):
 if __name__ == '__main__':
     for i in load_user():
         try:
-            main(i)
+            main(i
             right_mail(i)
 
 
         except Exception as e:
             print(e)
-            other_logger.error('未知错误')
+            other_logger.error('未知错误{}'.format(e.message))
 
