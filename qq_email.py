@@ -1,4 +1,3 @@
-from parameter import email_logger
 import smtplib
 from email.mime.text import MIMEText
 
@@ -46,6 +45,5 @@ def error_mail(user, content):
         print("发送成功")
     except smtplib.SMTPException:
         print("发送失败")
-        email_logger.info('邮件发送失败')
     finally:
         s.quit()
