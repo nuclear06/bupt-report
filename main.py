@@ -13,7 +13,7 @@ def load_user():
     :return:返回用户数据
     """
     user_list = eval(os.environ['USERS'])
-    
+    text = eval(os.environ['DATA'])
     data_list = []
     data_dict = {}
     iter = find.finditer(text)
