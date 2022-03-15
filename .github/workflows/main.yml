@@ -26,7 +26,7 @@ jobs:
           python -m pip install -r requirements.txt
       - name: Run CLOCK_IN
         run: |
-          python main.py
+          python3 main.py
         env:
           USERS: ${{ secrets.USERS }}
           SERVER_KEY: ${{ secrets.SERVER_KEY }}
