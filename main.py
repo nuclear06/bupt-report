@@ -8,3 +8,5 @@ logger.info('test')
 logger.warning('test')
 logger.debug('test')
 print('日志记录完毕')
+with open('Running_log','w') as f:
+  f.write('hello world')
