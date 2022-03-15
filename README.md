@@ -18,7 +18,7 @@
 
 按照下图添加SECRET
 
-![添加secret](.\images\添加secret.png)
+![添加secret](images/添加secret.png)
 
 
 
@@ -81,10 +81,13 @@ https://app.bupt.edu.cn/site/ncov/xisudailyup
 
 进入网站后填完数据，此时不要提交，按F12打开开发者模式，打开网络，此时进行提交，此时应会出现save项目，打开save项目，按如图操作复制得到数据
 
-![获得DATA](.\images\获得DATA .png)
+![获得DATA](https://github.com/nuclear06/fuck-clock-in/blob/2ec403d414b13abd279546260eff73f2ce267f9d/images/%E8%8E%B7%E5%BE%97DATA%20.png)
+
+
+
 
 ### 复制得到的数据如图
 
-![example](.\images\example.png)
+![example](images/example.png)
 
 此时将图示数据填入`DATA`，若是多人填报时请用回车分隔不同数据 ，且每个数据与每个人要按顺序对应
