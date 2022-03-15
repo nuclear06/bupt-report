@@ -5,6 +5,7 @@ import time
 from parameter import *
 from qq_email import error_mail
 from qq_email import right_mail
+import os
 
 
 def load_user():
