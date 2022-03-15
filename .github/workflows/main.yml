@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install -r logging
+          python -m pip install -r logging
       - name: Run CLOCK_IN
         run: |
           python3 main.py
