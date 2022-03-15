@@ -1,4 +1,3 @@
-#from parameter import email_logger
 import smtplib
 from email.mime.text import MIMEText
 
