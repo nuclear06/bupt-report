@@ -12,12 +12,20 @@ def load_user():
     :return:返回用户数据
     """
     user_list = eval(os.environ['USERS'])
-    post_data = eval(os.environ['DATA'])
-    return user_list, post_data
-    # with open('user.json') as f:
-    #     return json.load(f)
-
-
+    
+    data_list = []
+    data_dict = {}
+    iter = find.finditer(text)
+    for j in iter:
+        key = j.group('key')
+        value = j.group('value')
+        data_dict[key] = value
+        if key == 'askforleave':
+            data_list.append(data_dict.copy())
+            data_dict.clear()
+    
+    return user_list, data_list
+    
 def main(user, post_data):
     flag = 0
     RETURN_EMAIL = user['mail']
