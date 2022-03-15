@@ -38,14 +38,17 @@ def main(user):
             # 获得历史填报数据
             # print(get_data)
             # return
-            ####################################### resp2 = session.post(post_url, headers=head, data=get_data)
+            #######################################
+            resp2 = session.post(post_url, headers=head, data=get_data)
             # 填报数据
 
             if resp1.status_code != 200 and LOGGING:
                 main_logger.warning('用户[{}]登陆失败，状态码不是200'.format(id))
-            # if resp2.status_code != 200 and LOGGING:
-            #     main_logger.warning('用户[{}]填报失败，状态码不是200'.format(id))
-            if flag >= MAX_NUM and LOGGING:
+                continue
+            if resp2.status_code != 200 and LOGGING:
+                main_logger.warning('用户[{}]填报失败，状态码不是200'.format(id))
+                continue
+            if flag > MAX_NUM and LOGGING:
                 main_logger.error('填报失败次数过多，已终止')
                 error_mail(user, '填报失败次数过多，已终止')
                 raise Exception('失败次数过多')
