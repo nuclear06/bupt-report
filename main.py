@@ -73,14 +73,4 @@ if __name__ == '__main__':
         except Exception as e:
             print(e)
             other_logger.error('未知错误')
-    # if True:
-    # print('hello')
 
-    try:
-        if LOGGING:
-            log_check()
-    #         检测日志大小（预设最大10kb）
-    except NameError:
-        # 未检测到日志文件
-        other_logger.warning('未检测到日志文件')
-        pass
