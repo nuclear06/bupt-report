@@ -20,7 +20,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          then pip install -r requirements.txt; fi
+          pip install -r requirements.txt
       - name: Run CLOCK_IN
         run: |
           python main.py
