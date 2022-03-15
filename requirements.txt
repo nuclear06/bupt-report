@@ -1,2 +1,2 @@
-logging==0.49.6
+logging==0.4.9.6
 
