@@ -1,8 +1,10 @@
 import re
 import logging
 
-RIGHT_RETURN = True
+DATA_RETURN = True
+#正确填报时是否返回具体填报数据
 LOGGING = True
+#是否记录日志（用于填报失败返回数据）
 MAX_NUM = 3
 # 重复尝试次数最大值
 
