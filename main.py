@@ -57,12 +57,18 @@ def main(user, post_data):
                 time.sleep(15)
                 # 延迟一段时间后重试
                 continue
+            else:
+                main_logger.info('{}登陆成功'.format(user['id']))
+                
             if resp2.status_code != 200:
                 main_logger.warning('用户[{}]填报失败，状态码不是200'.format(id))
                 time.sleep(15)
                 # 延迟一段时间后重试
                 continue
+            else:
+                main_logger.info('{}填报成功'.format(user['id']))
 
+            
             break
         #     正常执行一次结束
 
