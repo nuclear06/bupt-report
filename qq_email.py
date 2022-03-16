@@ -21,6 +21,7 @@ def get_mail(msg_from,msg_to,flag,content):
 
 def right_mail(user,content='-NONE-'):
     try:
+        print('下面是日志信息')
         print(content)
         msg_from = user["mail_from"]  # 发送方邮箱
         passwd = user["mail_key"]  # 填入发送方邮箱的授权码
