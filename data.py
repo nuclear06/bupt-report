@@ -44,3 +44,6 @@ def screen(screen_text):
     return data_dict
 
 
+def get_log():
+    with open('./Running_log') as f:
+        return f.read()
