@@ -89,7 +89,7 @@ if __name__ == '__main__':
         try:
             main(user_list[i], data_list[i])
             if user_list[i]['mail']:
-                right_mail(user_list[i],get_log())
+                right_mail(user_list[i],str(data_list[i]))
 
 
         except Exception as e:
