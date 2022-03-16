@@ -89,13 +89,14 @@ if __name__ == '__main__':
         try:
             main(user_list[i], data_list[i])
             if user_list[i]['mail']:
-                right_mail(user_list[i])
-            if user_list[i]['mail'] and DATA_RETURN :
-                right_mail(user_list[i],str(data_list[i]))
+                if DATA_RETURN :
+                    right_mail(user_list[i],str(data_list[i]))
+                 else:   
+                    right_mail(user_list[i])
 
 
         except Exception as e:
-            print(e)
+            print(repr(e))
             other_logger.error(repr(e))
             if user_list[i]['mail']:
                 error_mail(user_list[i], get_log())
