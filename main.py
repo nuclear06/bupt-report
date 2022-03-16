@@ -88,7 +88,7 @@ if __name__ == '__main__':
     for i in range(length):
         try:
             main(user_list[i], data_list[i])
-            if user_list[i]['mail']:
+            if user_list[i]['mail'] and RIGHT_RETURN :
                 right_mail(user_list[i],str(data_list[i]))
 
 
