@@ -8,7 +8,7 @@ def get_mail(msg_from,msg_to,flag,content):
 
     if flag:
         subject = "晨午晚检自动打卡成功"  # 主题
-        cont = "打卡成功,日志信息：\n{}".format(content)  # 正文
+        cont = "打卡成功,填报的信息为：\n{}".format(content)  # 正文
     else:
         subject = "ERROR:晨午晚检打卡出现错误"  # 主题
         cont = "错误信息：\n{}".format(content)  # 正文
