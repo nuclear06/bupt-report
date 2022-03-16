@@ -13,7 +13,7 @@ def load_user():
     :return:返回用户数据
     """
     user_list = eval(os.environ['USERS'])
-    text = os.environ['DATA']
+    text = str(os.environ['DATA'])
     data_list = []
     data_dict = {}
     iter = find.finditer(text)
@@ -83,18 +83,17 @@ def main(user, post_data):
 
 
 if __name__ == '__main__':
-    temple = load_user()
-    length = len(temple[0])
+    user_list, data_list = load_user()
+    length = len(user_list)
     for i in range(length):
         try:
-            main(temple[0][i], temple[1][i])
-            if temple[0][i]['mail']:
-                right_mail(temple[0][i],get_log())
+            main(user_list[i], data_list[i])
+            if user_list[i]['mail']:
+                right_mail(user_list[i])
 
 
         except Exception as e:
             print(e)
             other_logger.error(repr(e))
-            if temple[0][i]['mail']:
-                error_mail(temple[0][i], get_log())
-
+            if user_list[i]['mail']:
+                error_mail(user_list[i], get_log())
