@@ -1,11 +1,9 @@
 import smtplib
 from email.mime.text import MIMEText
+from parameter import port
 
-s = smtplib.SMTP_SSL('smtp.qq.com', 465)  # 邮件服务器及端口号
 
-
-def get_mail(msg_from,msg_to,flag,content):
-
+def get_mail(msg_from,msg_to,flag,content):    
     if flag:
         subject = "晨午晚检自动打卡成功"  # 主题
         cont = "打卡成功,填报的信息为：\n{}".format(content)  # 正文
@@ -20,6 +18,7 @@ def get_mail(msg_from,msg_to,flag,content):
 
 
 def right_mail(user,content='-NONE-'):
+    s = smtplib.SMTP_SSL('smtp.qq.com', port)  # 邮件服务器及端口号
     try:
         msg_from = user["mail_from"]  # 发送方邮箱
         passwd = user["mail_key"]  # 填入发送方邮箱的授权码
@@ -35,6 +34,7 @@ def right_mail(user,content='-NONE-'):
 
 
 def error_mail(user, content):
+    s = smtplib.SMTP_SSL('smtp.qq.com', port)  # 邮件服务器及端口号
     try:
         msg_from = user["mail_from"]  # 发送方邮箱
         passwd = user["mail_key"]  # 填入发送方邮箱的授权码
