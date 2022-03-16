@@ -21,6 +21,7 @@ def get_mail(msg_from,msg_to,flag,content):
 
 def right_mail(user,content='-NONE-'):
     try:
+        print(content)
         msg_from = user["mail_from"]  # 发送方邮箱
         passwd = user["mail_key"]  # 填入发送方邮箱的授权码
         msg_to = user["mail_to"]  # 收件人邮箱
@@ -45,6 +46,5 @@ def error_mail(user, content):
         print("发送成功")
     except smtplib.SMTPException:
         print("发送失败")
-        email_logger.info('邮件发送失败')
     finally:
         s.quit()
