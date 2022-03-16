@@ -9,39 +9,28 @@ def get_logindata(user, pswd):
     return data
 
 
-def get_postdata(text):
-    dict = screen(text)
-
+def get_postdata(data_dict):
     null = None
     true = True
     # 修正eval(dict['geo_api_info'])中的变量
 
     data = {
-        'sfzx': '{}'.format(dict['sfzx']),
-        'tw': '{}'.format(dict['tw']),
-        'area': '{}'.format(dict['area']),
-        'city': '{}'.format(dict['city']),
-        'province': '{}'.format(dict['province']),
-        'address': '{}'.format(dict['address']),
-        'sfcyglq': '{}'.format(dict['sfcyglq']),
-        'sfyzz': '{}'.format(dict['sfyzz']),
+        'sfzx': '{}'.format(data_dict['sfzx']),
+        'tw': '{}'.format(data_dict['tw']),
+        'area': '{}'.format(data_dict['area']),
+        'city': '{}'.format(data_dict['city']),
+        'province': '{}'.format(data_dict['province']),
+        'address': '{}'.format(data_dict['address']),
+        'sfcyglq': '{}'.format(data_dict['sfcyglq']),
+        'sfyzz': '{}'.format(data_dict['sfyzz']),
         'qtqk': '',
-        'askforleave': '{}'.format(dict['askforleave']),
+        'askforleave': '{}'.format(data_dict['askforleave']),
 
-        'geo_api_info': eval(dict['geo_api_info'])
+        'geo_api_info': eval(data_dict['geo_api_info'])
     }
     # print(data)
     return data
 
-
-def screen(screen_text):
-    data_dict = {}
-    re_iter = find.finditer(screen_text)
-    for j in re_iter:
-        key = j.group('key')
-        value = j.group('value')
-        dict[key] = value
-    return data_dict
 
 
 def get_log():
