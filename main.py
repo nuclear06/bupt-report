@@ -91,7 +91,7 @@ if __name__ == '__main__':
             if user_list[i]['mail']:
                 if DATA_RETURN :
                     right_mail(user_list[i],str(data_list[i]))
-                 else:   
+                else:   
                     right_mail(user_list[i])
 
 
