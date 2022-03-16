@@ -1,6 +1,8 @@
 import re
 import logging
 
+port = 465
+#邮箱端口，默认为qq邮箱的
 DATA_RETURN = True
 #正确填报时是否返回具体填报数据
 LOGGING = True
