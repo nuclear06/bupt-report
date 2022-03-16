@@ -34,5 +34,7 @@ def get_postdata(data_dict):
 
 
 def get_log():
-    with open('./Running_log') as f:
-        return f.read()
+    with open('Running_log','r') as f:
+        temp = f.read()
+        print('log is {}'.format(temp))
+        return temp
