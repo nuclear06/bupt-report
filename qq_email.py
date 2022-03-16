@@ -19,7 +19,7 @@ def get_mail(msg_from,msg_to,flag,content):
     return msg
 
 
-def right_mail(user,content='-UNKNOWN-'):
+def right_mail(user,content='-NONE-'):
     try:
         msg_from = user["mail_from"]  # 发送方邮箱
         passwd = user["mail_key"]  # 填入发送方邮箱的授权码
