@@ -31,3 +31,10 @@ def get_postdata(data_dict):
     # print(data)
     return data
 
+
+
+def get_log():
+    with open('Running_log','r') as f:
+        temp = f.readlines()
+        print('log is {}'.format(temp))
+        return temp
