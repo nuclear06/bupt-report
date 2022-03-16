@@ -1,6 +1,7 @@
 import re
 import logging
 
+RIGHT_RETURN = True
 LOGGING = True
 MAX_NUM = 3
 # 重复尝试次数最大值
