@@ -29,7 +29,7 @@
 
 ## `USER`：
 
-https://app.bupt.edu.cn/uc/wap/login/check	
+https://app.bupt.edu.cn/uc/wap/login
 
 该网站用于测试学号和密码是否正确
 
