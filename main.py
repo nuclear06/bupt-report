@@ -24,9 +24,10 @@ def load_user():
         if key == 'askforleave':
             data_list.append(data_dict.copy())
             data_dict.clear()
-    
+
     return user_list, data_list
-    
+
+
 def main(user, post_data):
     flag = 0
     RETURN_EMAIL = user['mail']
@@ -59,7 +60,7 @@ def main(user, post_data):
                 continue
             else:
                 main_logger.info('{}登陆成功'.format(user['id']))
-                
+
             if resp2.status_code != 200:
                 main_logger.warning('用户[{}]填报失败，状态码不是200'.format(id))
                 time.sleep(15)
@@ -68,7 +69,6 @@ def main(user, post_data):
             else:
                 main_logger.info('{}填报成功'.format(user['id']))
 
-            
             break
         #     正常执行一次结束
 
@@ -95,9 +95,9 @@ if __name__ == '__main__':
         try:
             main(user_list[i], data_list[i])
             if user_list[i]['mail']:
-                if DATA_RETURN :
-                    right_mail(user_list[i],str(data_list[i]))
-                else:   
+                if DATA_RETURN:
+                    right_mail(user_list[i], str(data_list[i]))
+                else:
                     right_mail(user_list[i])
 
 
