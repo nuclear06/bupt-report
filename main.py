@@ -94,6 +94,11 @@ def main(user, post_data):
 
             break
         #     正常执行一次结束
+        except ConnectionError as er:
+            repr(er)
+            main_logger.error(str(er))
+            continue
+        #     第二登陆方式莫名其妙会出现的问题
 
         except ZeroDivisionError as mes:
             print(mes)
