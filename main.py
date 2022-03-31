@@ -5,6 +5,7 @@ import time
 from parameter import *
 from qq_email import error_mail
 from qq_email import right_mail
+from resp import *
 import os
 
 
@@ -14,6 +15,7 @@ def load_user():
     """
     user_list = eval(os.environ['USERS'])
     text = str(os.environ['DATA'])
+    # print(text)
     data_list = []
     data_dict = {}
     iter = find.finditer(text)
@@ -22,6 +24,7 @@ def load_user():
         value = j.group('value')
         data_dict[key] = value
         if key == 'askforleave':
+            data_dict['askforleave'] = 0
             data_list.append(data_dict.copy())
             data_dict.clear()
 
@@ -29,45 +32,65 @@ def load_user():
 
 
 def main(user, post_data):
+    myresp = Resp()
+    login_way = 1
+    # 记录登陆方式
     flag = 0
+    # 记录已重试次数
     RETURN_EMAIL = user['mail']
     session = requests.Session()
     account = user['user']
     pswd = user['pswd']
-    id = user['id']
+    myid = user['id']
     while True:
         try:
 
             flag += 1
             if flag > MAX_NUM:
-                error = '[{}]失败次数过多，其填报已终止'.format(user['id'])
+                error = '[{}]失败次数过多，其填报已终止'.format(myid)
                 raise ZeroDivisionError(error)
-
-            resp1 = session.post(check_url, headers=head, data=get_logindata(account, pswd))
-            # 登陆
-            message = re_message.search(resp1.text).groups()[0]
-            message_check(message)
-            # 检测登陆信息
+            if login_way == 1:
+                resp1 = session.post(login_url, headers=Head.head, data=get_logindata(account, pswd))
+                myresp.add_resp('resp1', resp1)
+                # 登陆
+                message = re_message.search(resp1.text).groups()[0]
+                # 检测登陆信息
+                if message_check(message):
+                    '''
+                    检测登陆信息，如果成功返回False，失败抛出异常，是另外的登录方式自动切换
+                    '''
+                    login_way = 2
+                    continue
+            elif login_way == 2:
+                main_logger.info('登录方式已切换')
+                resp1 = session.post(backup_login_url, headers=Head.backup_head,
+                                     data=get_logindata(account, pswd, False))
+                backup_check(resp1.text)
+                main_logger.info('{}登录成功'.format(myid))
+                myresp.add_resp('resp1', resp1)
 
             get_data = get_postdata(post_data)
-            resp2 = session.post(post_url, headers=head, data=get_data)
+            resp2 = session.post(post_url, headers=Head.head, data=get_data)
             # 填报数据
 
-            if resp1.status_code != 200:
-                main_logger.warning('用户[{}]登陆失败，状态码不是200'.format(id))
+            if myresp.resp_dict['resp1'].status_code != 200:
+                main_logger.warning('用户[{}]登陆失败，状态码不是200'.format(myid))
                 time.sleep(15)
                 # 延迟一段时间后重试
                 continue
             else:
-                main_logger.info('{}登陆成功'.format(user['id']))
+                main_logger.info('{}登录页面连接成功，状态码为200'.format(myid))
 
             if resp2.status_code != 200:
-                main_logger.warning('用户[{}]填报失败，状态码不是200'.format(id))
+                main_logger.warning('用户[{}]填报失败，状态码不是200'.format(myid))
                 time.sleep(15)
                 # 延迟一段时间后重试
                 continue
             else:
-                main_logger.info('{}填报成功'.format(user['id']))
+                main_logger.info('{}填报页面连接成功，状态码为200'.format(myid))
+
+            if CHECK:
+                report_check(session)
 
             break
         #     正常执行一次结束
@@ -100,7 +123,12 @@ if __name__ == '__main__':
                 else:
                     right_mail(user_list[i])
 
-
+        except KeyError or IndexError as e:
+            print(repr(e))
+            print("请检查输入的历史填报数据")
+            other_logger.error(repr(e))
+            if user_list[i]['mail']:
+                error_mail(user_list[i], get_log())
         except Exception as e:
             print(repr(e))
             other_logger.error(repr(e))
