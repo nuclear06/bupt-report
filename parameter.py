@@ -16,7 +16,7 @@ DEBUG = True
 
 backup_checkre = re.compile('手机验证码登录', re.S)
 re_message = re.compile('"m":"(.*?)"', re.S)
-find = re.compile(' (?P<key>.*?): (?P<value>.*?)\|')
+find = re.compile(' (?P<key>.*?): (?P<value>.*?)')
 
 logging.basicConfig(filename='Running_log', level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s - [line:%(lineno)d] ')
