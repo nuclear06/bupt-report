@@ -1,4 +1,5 @@
 import requests
+from requests.adapters import HTTPAdapter
 from data import *
 from checks import *
 import time
@@ -39,6 +40,8 @@ def main(user, post_data):
     # 记录已重试次数
     RETURN_EMAIL = user['mail']
     session = requests.Session()
+    session.mount('http://', HTTPAdapter(max_retries=15))
+    session.mount('https://', HTTPAdapter(max_retries=15))
     account = user['user']
     pswd = user['pswd']
     myid = user['id']
@@ -94,7 +97,7 @@ def main(user, post_data):
 
             break
         #     正常执行一次结束
-        except ConnectionError as er:
+        except requests.ConnectionError as er:
             repr(er)
             main_logger.error(str(er))
             time.sleep(15)
