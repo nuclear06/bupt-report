@@ -12,19 +12,20 @@ LOGGING = True
 MAX_NUM = 3
 # 重复尝试次数最大值
 
-DEBUG = False
+DEBUG = True
 
 backup_checkre = re.compile('手机验证码登录', re.S)
 re_message = re.compile('"m":"(.*?)"', re.S)
-find = re.compile('(?P<key>.*?): (?P<value>.*)')
-
+find = re.compile(' (?P<key>.*?): (?P<value>.*?)\|')
 
 logging.basicConfig(filename='Running_log', level=logging.INFO,
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s - [line:%(lineno)d] ')
-# console = logging.StreamHandler()
-# console.setLevel(logging.INFO)
-# formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s - [line:%(lineno)d]')
-# console.setFormatter(formatter)
+
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+formatter = logging.Formatter('%(name)s - %(levelname)s - %(message)s - [line:%(lineno)d]')
+console.setFormatter(formatter)
+
 main_logger = logging.getLogger('main')
 other_logger = logging.getLogger('__main__')
 email_logger = logging.getLogger('email')
