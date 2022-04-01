@@ -97,6 +97,7 @@ def main(user, post_data):
         except ConnectionError as er:
             repr(er)
             main_logger.error(str(er))
+            time.sleep(15)
             continue
         #     第二登陆方式莫名其妙会出现的问题
 
@@ -105,13 +106,15 @@ def main(user, post_data):
             main_logger.error(str(mes))
             if RETURN_EMAIL:
                 error_mail(user, get_log())
+            exit(-1)
+            # 登陆失败次数达到最大时会抛出的异常
 
         except RuntimeWarning as mes:
             print(str(mes) + '请检查输入的账户信息')
             if RETURN_EMAIL:
                 error_mail(user, str(mes) + '请检查输入的账户信息')
             exit(-1)
-        #     登陆时会出现的错误
+        #     登陆失败时会抛出出现的错误
         #     随便找了两个错误来捕捉
     session.close()
 
