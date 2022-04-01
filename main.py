@@ -131,7 +131,7 @@ if __name__ == '__main__':
                 else:
                     right_mail(user_list[i])
 
-        except KeyError or IndexError as e:
+        except (KeyError,IndexError) as e:
             print(repr(e))
             print("请检查输入的历史填报数据")
             other_logger.error(repr(e))
