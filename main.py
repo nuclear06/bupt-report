@@ -122,6 +122,8 @@ def main(user, post_data):
 if __name__ == '__main__':
     user_list, data_list = load_user()
     length = len(user_list)
+    if len(user_list) != len(data_list):
+        raise KeyError("数据读取发生错误")
     for i in range(length):
         try:
             main(user_list[i], data_list[i])
