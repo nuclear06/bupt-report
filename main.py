@@ -125,6 +125,7 @@ if __name__ == '__main__':
     if len(user_list) != len(data_list):
         raise KeyError("数据读取发生错误")
     for i in range(length):
+
         try:
             main(user_list[i], data_list[i])
             if user_list[i]['mail']:
