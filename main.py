@@ -16,18 +16,16 @@ def load_user():
     """
     user_list = eval(os.environ['USERS'])
     text = str(os.environ['DATA'])
-    # print(text)
     data_list = []
-    data_dict = {}
-    iter = find.finditer(text)
-    for j in iter:
-        key = j.group('key')
-        value = j.group('value')
-        data_dict[key] = value
-        if key == 'askforleave':
-            data_dict['askforleave'] = 0
-            data_list.append(data_dict.copy())
-            data_dict.clear()
+    _iter = find.finditer(text)
+    iter_len = 0
+    for _ in _iter:
+        for j in _.groups():
+            iter_len += 1
+            data = '{' + j.replace('\n', ' ') + '}'
+            data_list.append(data)
+    if not iter_len:
+        raise RuntimeWarning('正则匹配到的信息为空')
 
     return user_list, data_list
 
@@ -71,10 +69,13 @@ def main(user, post_data):
                 backup_check(resp1.text)
                 main_logger.info('{}登录成功'.format(myid))
                 myresp.add_resp('resp1', resp1)
-
-            get_data = get_postdata(post_data)
-            resp2 = session.post(post_url, headers=Head.head, data=get_data)
+            try:
+                resp2 = session.post(post_url, headers=Head.head, data=post_data.encode('utf-8'))
             # 填报数据
+            except Exception as e:
+                main_logger.error(repr(e) + '  填报数据时发生错误')
+                time.sleep(15)
+                continue
 
             if myresp.resp_dict['resp1'].status_code != 200:
                 main_logger.warning('用户[{}]登陆失败，状态码不是200'.format(myid))
@@ -137,7 +138,7 @@ if __name__ == '__main__':
                 else:
                     right_mail(user_list[i])
 
-        except (KeyError,IndexError) as e:
+        except (KeyError, IndexError) as e:
             print(repr(e))
             print("请检查输入的历史填报数据")
             other_logger.error(repr(e))
