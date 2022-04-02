@@ -22,7 +22,7 @@ def load_user():
     for _ in _iter:
         for j in _.groups():
             iter_len += 1
-            data = '{' + j.replace('\n', ' ') + '}'
+            data = '{' + j.replace('\n', ' ,') + '}'
             data_list.append(data)
     if not iter_len:
         raise RuntimeWarning('正则匹配到的信息为空')
