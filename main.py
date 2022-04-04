@@ -1,3 +1,4 @@
+# import re
 import requests
 from requests.adapters import HTTPAdapter
 from data import *
@@ -10,6 +11,28 @@ from resp import *
 import os
 
 
+def daily(_session):
+    for _ in range(5):
+        resp = _session.get(history_url)
+        # print(resp.text)
+        history = re.search(
+            re.compile('oldInfo: ({"ismoved".*?"id":\d*}),', re.S), resp.text
+        ).groups()[0]
+        history = eval(history)
+        _session.post(daily_report_api, data=history)
+        message = re.search(re.compile('"m":"(.*?)"'), resp.text).groups()[0]
+        time.sleep(10)
+        if message == '今天已经填报了' or '操作成功':
+            daily_logger.info('每日打卡填报成功')
+            break
+        elif message == '定位信息不能为空':
+            raise RuntimeWarning('服务器返回:定位信息不能为空')
+        elif _ == 4:
+            raise RuntimeWarning(message + '，已达到最大填报尝试次数上限')
+        else:
+            raise RuntimeWarning(message + ',未预料到的错误')
+
+
 def load_user():
     """
     :return:返回用户数据
@@ -17,14 +40,22 @@ def load_user():
     user_list = eval(os.environ['USERS'])
     text = str(os.environ['DATA'])
     data_list = []
-    _iter = find.finditer(text)
-    iter_len = 0
-    for _ in _iter:
-        for j in _.groups():
-            iter_len += 1
-            data = '{' + j.replace('\n', ' ,') + '}'
-            data_list.append(data)
-    if not iter_len:
+    find_text = data_refind.findall(text)
+    # 匹配所有符合格式的数据
+    for i in find_text:
+        data_find = re.findall(re.compile("(?P<key>.*?): (?P<value>.*)"), i)
+        # 对每个人的数据中的属性进行提取
+        data_str = '{'
+        for j in data_find:
+            if j[0] != 'geo_api_info':
+                data_str += '"{}":"{}",'.format(*j)
+            else:
+                data_str += '“{}”:{},'.format(*j)
+        new_str = data_str[:-1]
+        new_str += '}'
+        data_list.append(new_str)
+
+    if not len(find_text):
         raise RuntimeWarning('正则匹配到的信息为空')
 
     return user_list, data_list
@@ -120,24 +151,24 @@ def main(user, post_data):
             exit(-1)
         #     登陆失败时会抛出出现的错误
         #     随便找了两个错误来捕捉
-    session.close()
+    return session
 
 
 if __name__ == '__main__':
     user_list, data_list = load_user()
+
     length = len(user_list)
     if len(user_list) != len(data_list):
         raise KeyError("数据读取发生错误")
     for i in range(length):
-
         try:
-            main(user_list[i], data_list[i])
+            use_session = main(user_list[i], data_list[i])
             if user_list[i]['mail']:
                 if DATA_RETURN:
                     right_mail(user_list[i], str(data_list[i]))
                 else:
                     right_mail(user_list[i])
-
+            pass
         except (KeyError, IndexError) as e:
             print(repr(e))
             print("请检查输入的历史填报数据")
@@ -149,3 +180,16 @@ if __name__ == '__main__':
             other_logger.error(repr(e))
             if user_list[i]['mail']:
                 error_mail(user_list[i], get_log())
+        # 晨午晚检部分
+        ###############################################################################
+        # 每日填报部分
+
+        try:
+            daily(use_session)
+        except RuntimeWarning as e:
+            print('每日填报出现问题')
+            daily_logger.error(str(e))
+            error_mail(user_list[i], get_log())
+        except Exception as e:
+            daily_logger.error(repr(e))
+            error_mail(user_list[i], get_log())
