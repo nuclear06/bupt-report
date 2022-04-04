@@ -30,7 +30,7 @@
 
 
 
-## `USER`：
+## `USERS`：
 
 https://app.bupt.edu.cn/uc/wap/login
 
