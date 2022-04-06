@@ -183,7 +183,7 @@ if __name__ == '__main__':
             error_mail(user_list[i], get_log())
         # 晨午晚检部分
         ###############################################################################
-        # 每日填报部分
+        # 每日填报部分（如果不需要可以删除以下部分）
 
         try:
             daily(_session)
@@ -195,3 +195,4 @@ if __name__ == '__main__':
         except Exception as e:
             daily_logger.error(repr(e))
             error_mail(user_list[i], get_log(), False)
+        ###############################################################################
