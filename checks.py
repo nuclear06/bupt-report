@@ -18,14 +18,14 @@ def report_check(session):
     # print(resp.text)
     message = re_message.search(resp.text).groups()[0]
     if message == '您已上报过':
-        other_logger.info('检测填报成功')
-        return False
+        other_logger.info('test 检测填报成功')
+        return True
     elif message == '操作成功':
         other_logger.warning('检测填报失败，但是由于检测也算填报，故填报成功')
-        return False
+        return True
     else:
         other_logger.error('填报失败\n'+message)
-        return True
+        return False
 
 
 def backup_check(text):
