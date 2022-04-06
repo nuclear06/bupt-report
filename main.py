@@ -1,4 +1,3 @@
-# import re
 import requests
 from requests.adapters import HTTPAdapter
 from data import *
@@ -12,22 +11,22 @@ import os
 
 
 def daily(_session):
-    for _ in range(5):
+    for _ in range(20):
         resp = _session.get(history_url)
         # print(resp.text)
         history = re.search(
             re.compile('oldInfo: ({"ismoved".*?"id":\d*}),', re.S), resp.text
-        ).groups()[0]
+        ).group(1)
         history = eval(history)
-        _session.post(daily_report_api, data=history)
-        message = re.search(re.compile('"m":"(.*?)"'), resp.text).groups()[0]
+        resp2 = _session.post(daily_report_api, data=history)
+        message = re.search(re.compile('"m":"(.*?)"'), resp2.text).groups()[0]
         time.sleep(10)
         if message == '今天已经填报了' or '操作成功':
             daily_logger.info('每日打卡填报成功')
             break
         elif message == '定位信息不能为空':
             raise RuntimeWarning('服务器返回:定位信息不能为空')
-        elif _ == 4:
+        elif _ == 19:
             raise RuntimeWarning(message + '，已达到最大填报尝试次数上限')
         else:
             raise RuntimeWarning(message + ',未预料到的错误')
@@ -50,7 +49,7 @@ def load_user():
             if j[0] != 'geo_api_info':
                 data_str += '"{}":"{}",'.format(*j)
             else:
-                data_str += '“{}”:{},'.format(*j)
+                data_str += '"{}":{},'.format(*j)
         new_str = data_str[:-1]
         new_str += '}'
         data_list.append(new_str)
@@ -95,8 +94,12 @@ def main(user, post_data):
                     continue
             elif login_way == 2:
                 main_logger.info('登录方式已切换')
-                resp1 = session.post(backup_login_url, headers=Head.backup_head,
-                                     data=get_logindata(account, pswd, False))
+                resp_temp = session.get(backup_login_url, headers=Head.head)
+                execution = re.search(re.compile('execution" value="(.*?)"/><input '), resp_temp.text).group(1)
+
+                resp1 = session.post(backup_login_url, headers=Head.head,
+                                     data=get_logindata(account, pswd, False, execution))
+
                 backup_check(resp1.text)
                 main_logger.info('{}登录成功'.format(myid))
                 myresp.add_resp('resp1', resp1)
@@ -125,8 +128,10 @@ def main(user, post_data):
                 main_logger.info('{}填报页面连接成功，状态码为200'.format(myid))
 
             if CHECK:
-                report_check(session)
-
+                if report_check(session):
+                    break
+                else:
+                    continue
             break
         #     正常执行一次结束
         except requests.ConnectionError as er:
@@ -156,40 +161,37 @@ def main(user, post_data):
 
 if __name__ == '__main__':
     user_list, data_list = load_user()
-
     length = len(user_list)
     if len(user_list) != len(data_list):
         raise KeyError("数据读取发生错误")
     for i in range(length):
         try:
-            use_session = main(user_list[i], data_list[i])
-            if user_list[i]['mail']:
-                if DATA_RETURN:
-                    right_mail(user_list[i], str(data_list[i]))
-                else:
-                    right_mail(user_list[i])
-            pass
+            _session = main(user_list[i], data_list[i])
+            if DATA_RETURN:
+                right_mail(user_list[i], True, str(data_list[i]))
+            else:
+                right_mail(user_list[i], True)
+
         except (KeyError, IndexError) as e:
             print(repr(e))
             print("请检查输入的历史填报数据")
             other_logger.error(repr(e))
-            if user_list[i]['mail']:
-                error_mail(user_list[i], get_log())
+            error_mail(user_list[i], get_log())
         except Exception as e:
             print(repr(e))
             other_logger.error(repr(e))
-            if user_list[i]['mail']:
-                error_mail(user_list[i], get_log())
+            error_mail(user_list[i], get_log())
         # 晨午晚检部分
         ###############################################################################
         # 每日填报部分
 
         try:
-            daily(use_session)
+            daily(_session)
+            right_mail(user_list[i], False)
         except RuntimeWarning as e:
-            print('每日填报出现问题')
+            print('每日上报出现问题')
             daily_logger.error(str(e))
-            error_mail(user_list[i], get_log())
+            error_mail(user_list[i], get_log(), False)
         except Exception as e:
             daily_logger.error(repr(e))
-            error_mail(user_list[i], get_log())
+            error_mail(user_list[i], get_log(), False)

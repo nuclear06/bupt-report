@@ -5,10 +5,7 @@ class Head:
     head = {
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36',
     }
-    backup_head = {
-        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.84 Safari/537.36',
-        'cookie': '_7da9a=d9660f87cdb3a76c'
-    }
+
 
     @staticmethod
     def get_head(_dict):
@@ -27,7 +24,3 @@ class Resp:
         self.resp_dict[name] = response
 
 
-# def backup_gethead(session):
-#     resp1 = session.get(backup_login_url, headers=Head.head)
-#     resp1 = session.post(backup_login_url, headers=Head.backup_head, data=login_data)
-#     # print(resp1.text)
