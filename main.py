@@ -17,19 +17,20 @@ def daily(_session):
         history = re.search(
             re.compile('oldInfo: ({"ismoved".*?"id":\d*}),', re.S), resp.text
         ).group(1)
+        history = u'{}'.format(history)
         history = eval(history)
+        # print(history)
         resp2 = _session.post(daily_report_api, data=history)
         message = re.search(re.compile('"m":"(.*?)"'), resp2.text).groups()[0]
-        time.sleep(10)
         if message == '今天已经填报了' or '操作成功':
             daily_logger.info('每日打卡填报成功')
-            break
+            return str(history)
         elif message == '定位信息不能为空':
             raise RuntimeWarning('服务器返回:定位信息不能为空')
         elif _ == 19:
-            raise RuntimeWarning(message + '，已达到最大填报尝试次数上限')
-        else:
-            raise RuntimeWarning(message + ',未预料到的错误')
+            raise RuntimeWarning('服务器最后返回的信息为：'+message + '，已达到最大填报尝试次数上限')
+
+        time.sleep(10)
 
 
 def load_user():
@@ -186,8 +187,11 @@ if __name__ == '__main__':
         # 每日填报部分（如果不需要可以删除以下部分）
 
         try:
-            daily(_session)
-            right_mail(user_list[i], False)
+            daily_data = daily(_session)
+            if DATA_RETURN:
+                right_mail(user_list[i], False, str(daily_data))
+            else:
+                right_mail(user_list[i], False)
         except RuntimeWarning as e:
             print('每日上报出现问题')
             daily_logger.error(str(e))
