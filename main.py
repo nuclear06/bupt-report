@@ -1,4 +1,5 @@
 import requests
+import urllib3
 from requests.adapters import HTTPAdapter
 from data import *
 from checks import *
@@ -9,9 +10,8 @@ from qq_email import right_mail
 from resp import *
 import os
 
-
 def daily(_session):
-    for _ in range(20):
+    for _ in range(MAX_NUM):
         resp = _session.get(history_url)
         # print(resp.text)
         history = re.search(
@@ -27,10 +27,10 @@ def daily(_session):
             return str(history)
         elif message == '定位信息不能为空':
             raise RuntimeWarning('服务器返回:定位信息不能为空')
-        elif _ == 19:
-            raise RuntimeWarning('服务器最后返回的信息为：'+message + '，已达到最大填报尝试次数上限')
+        if _ == MAX_NUM - 1:
+            raise RuntimeWarning('服务器最后返回的信息为：' + message + '，已达到最大填报尝试次数上限')
 
-        time.sleep(10)
+        time.sleep(20)
 
 
 def load_user():
@@ -65,20 +65,17 @@ def main(user, post_data):
     myresp = Resp()
     login_way = 1
     # 记录登陆方式
-    flag = 0
-    # 记录已重试次数
     RETURN_EMAIL = user['mail']
     session = requests.Session()
-    session.mount('http://', HTTPAdapter(max_retries=15))
-    session.mount('https://', HTTPAdapter(max_retries=15))
+    session.mount('http://', HTTPAdapter(max_retries=50))
+    session.mount('https://', HTTPAdapter(max_retries=50))
     account = user['user']
     pswd = user['pswd']
     myid = user['id']
-    while True:
+    for _ in range(MAX_NUM):
         try:
 
-            flag += 1
-            if flag > MAX_NUM:
+            if _ == MAX_NUM - 1:
                 error = '[{}]失败次数过多，其填报已终止'.format(myid)
                 raise ZeroDivisionError(error)
             if login_way == 1:
@@ -95,7 +92,7 @@ def main(user, post_data):
                     continue
             elif login_way == 2:
                 main_logger.info('登录方式已切换')
-                resp_temp = session.get(backup_login_url, headers=Head.head)
+                resp_temp = session.get(backup_login_url, headers=Head.head, verify=False)
                 execution = re.search(re.compile('execution" value="(.*?)"/><input '), resp_temp.text).group(1)
 
                 resp1 = session.post(backup_login_url, headers=Head.head,
@@ -109,12 +106,12 @@ def main(user, post_data):
             # 填报数据
             except Exception as e:
                 main_logger.error(repr(e) + '  填报数据时发生错误')
-                time.sleep(15)
+                time.sleep(20)
                 continue
 
             if myresp.resp_dict['resp1'].status_code != 200:
                 main_logger.warning('用户[{}]登陆失败，状态码不是200'.format(myid))
-                time.sleep(15)
+                time.sleep(20)
                 # 延迟一段时间后重试
                 continue
             else:
@@ -122,7 +119,7 @@ def main(user, post_data):
 
             if resp2.status_code != 200:
                 main_logger.warning('用户[{}]填报失败，状态码不是200'.format(myid))
-                time.sleep(15)
+                time.sleep(20)
                 # 延迟一段时间后重试
                 continue
             else:
@@ -135,10 +132,10 @@ def main(user, post_data):
                     continue
             break
         #     正常执行一次结束
-        except requests.ConnectionError as er:
+        except requests.exceptions.ConnectionError as er:
             repr(er)
             main_logger.error(str(er))
-            time.sleep(15)
+            time.sleep(20)
             continue
         #     第二登陆方式莫名其妙会出现的问题
 
@@ -150,7 +147,7 @@ def main(user, post_data):
             exit(-1)
             # 登陆失败次数达到最大时会抛出的异常
 
-        except RuntimeWarning as mes:
+        except RuntimeWarning as mes:  # 错误来自L87 message_check
             print(str(mes) + '请检查输入的账户信息')
             if RETURN_EMAIL:
                 error_mail(user, str(mes) + '请检查输入的账户信息')
@@ -161,6 +158,7 @@ def main(user, post_data):
 
 
 if __name__ == '__main__':
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     user_list, data_list = load_user()
     length = len(user_list)
     if len(user_list) != len(data_list):
