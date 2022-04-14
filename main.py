@@ -161,8 +161,7 @@ if __name__ == '__main__':
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     user_list, data_list = load_user()
     length = 1
-    if len(user_list) != len(data_list):
-        raise KeyError("数据读取发生错误")
+ 
     for i in range(length):
         try:
             _session = main(user_list[i], data_list[i])
