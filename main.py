@@ -160,7 +160,7 @@ def main(user, post_data):
 if __name__ == '__main__':
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     user_list, data_list = load_user()
-    length = len(user_list)
+    length = 1
     if len(user_list) != len(data_list):
         raise KeyError("数据读取发生错误")
     for i in range(length):
@@ -183,18 +183,3 @@ if __name__ == '__main__':
         # 晨午晚检部分
         ###############################################################################
         # 每日填报部分（如果不需要可以删除以下部分）
-
-        try:
-            daily_data = daily(_session)
-            if DATA_RETURN:
-                right_mail(user_list[i], False, str(daily_data))
-            else:
-                right_mail(user_list[i], False)
-        except RuntimeWarning as e:
-            print('每日上报出现问题')
-            daily_logger.error(str(e))
-            error_mail(user_list[i], get_log(), False)
-        except Exception as e:
-            daily_logger.error(repr(e))
-            error_mail(user_list[i], get_log(), False)
-        ###############################################################################
