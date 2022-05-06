@@ -67,8 +67,8 @@ def main(user, post_data):
     # 记录登陆方式
     RETURN_EMAIL = user['mail']
     session = requests.Session()
-    session.mount('http://', HTTPAdapter(max_retries=50))
-    session.mount('https://', HTTPAdapter(max_retries=50))
+    session.mount('http://', HTTPAdapter(max_retries=300))
+    session.mount('https://', HTTPAdapter(max_retries=300))
     account = user['user']
     pswd = user['pswd']
     myid = user['id']
