@@ -82,7 +82,7 @@ https://app.bupt.edu.cn/uc/wap/login
 
 ## `DATA`:
 
-即你在打卡时发送的数据
+即你在打卡时发送的数据（注意，这个打卡数据是晨午晚检的数据，不是每日填报的数据，每日填报的数据将使用历史提交记录）
 
 https://app.bupt.edu.cn/site/ncov/xisudailyup
 
